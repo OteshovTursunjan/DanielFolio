@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Фолио</string>
+
+    <!-- Auth Screen -->
+    <string name="auth_tagline">Ваши мысли и задачи — всегда под рукой</string>
+    <string name="auth_subtitle">Заметки, списки дел и мгновенная синхронизация между всеми устройствами через облако.</string>
+    <string name="auth_feature_sync_title">Мгновенная синхронизация</string>
+    <string name="auth_feature_sync_desc">Изменения сохраняются в реальном времени и доступны офлайн</string>
+    <string name="auth_feature_organize_title">Заметки и списки задач</string>
+    <string name="auth_feature_organize_desc">Категории, цветовые акценты, приоритеты и сроки выполнения</string>
+    <string name="auth_feature_private_title">Приватное хранилище</string>
+    <string name="auth_feature_private_desc">Данные защищены и привязаны только к вашему аккаунту Google</string>
+    <string name="auth_sign_in_google">Войти через Google</string>
+    <string name="auth_signing_in">Выполняется вход…</string>
+    <string name="auth_checking_session">Проверка сессии…</string>
+    <string name="auth_hero_cd">Иллюстрация блокнота и облачной синхронизации</string>
+    <string name="auth_error_missing_config">Не найдена конфигурация Google Sign-In</string>
+    <string name="auth_error_generic">Не удалось войти через Google. Попробуйте снова.</string>
+
+    <!-- Navigation -->
+    <string name="nav_notes">Заметки</string>
+    <string name="nav_tasks">Задачи</string>
+    <string name="nav_cloud">Облако</string>
+
+    <!-- Notes Tab -->
+    <string name="notes_screen_title">Заметки</string>
+    <string name="notes_search_hint">Поиск по заметкам…</string>
+    <string name="notes_filter_all">Все</string>
+    <string name="notes_filter_pinned">Закреплённые</string>
+    <string name="notes_section_pinned">Закреплённые</string>
+    <string name="notes_section_others">Все заметки</string>
+    <string name="notes_empty_title">Чистый лист</string>
+    <string name="notes_empty_subtitle">Запишите идею, конспект или важную мысль — она сразу сохранится в облаке.</string>
+    <string name="notes_empty_search_title">Ничего не найдено</string>
+    <string name="notes_empty_search_subtitle">Попробуйте изменить запрос или выбрать другую категорию.</string>
+    <string name="notes_fab_new">Новая заметка</string>
+    <string name="notes_untitled">Без названия</string>
+    <string name="notes_pin_cd">Закрепить заметку</string>
+    <string name="notes_unpin_cd">Открепить заметку</string>
+    <string name="notes_clear_search_cd">Очистить поиск</string>
+
+    <!-- Note Categories -->
+    <string name="category_personal">Личное</string>
+    <string name="category_work">Работа</string>
+    <string name="category_ideas">Идеи</string>
+    <string name="category_study">Учёба</string>
+    <string name="category_other">Другое</string>
+
+    <!-- Note Editor -->
+    <string name="editor_new_note">Новая заметка</string>
+    <string name="editor_edit_note">Редактирование</string>
+    <string name="editor_title_hint">Заголовок</string>
+    <string name="editor_content_hint">Начните писать здесь…</string>
+    <string name="editor_category_label">Категория</string>
+    <string name="editor_color_label">Оттенок листа</string>
+    <string name="editor_save">Сохранить</string>
+    <string name="editor_saving">Сохранение…</string>
+    <string name="editor_delete">Удалить</string>
+    <string name="editor_delete_confirm_title">Удалить заметку?</string>
+    <string name="editor_delete_confirm_body">Заметка будет безвозвратно удалена из облака на всех устройствах.</string>
+    <string name="editor_validation_empty">Введите заголовок или текст заметки</string>
+    <string name="editor_back_cd">Назад</string>
+
+    <!-- Tasks Tab -->
+    <string name="tasks_screen_title">Задачи</string>
+    <string name="tasks_all_lists">Все списки</string>
+    <string name="tasks_new_list_chip">Список</string>
+    <string name="tasks_filter_all">Все</string>
+    <string name="tasks_filter_active">Активные</string>
+    <string name="tasks_filter_completed">Выполненные</string>
+    <string name="tasks_progress_title">Прогресс выполнения</string>
+    <string name="tasks_progress_summary">%1$d из %2$d выполнено</string>
+    <string name="tasks_empty_lists_title">Создайте первый список задач</string>
+    <string name="tasks_empty_lists_subtitle">Группируйте дела по проектам, покупкам или планам на день.</string>
+    <string name="tasks_empty_items_title">Задач пока нет</string>
+    <string name="tasks_empty_items_subtitle">Добавьте новую задачу — отметка выполнения синхронизируется мгновенно.</string>
+    <string name="tasks_fab_new">Новая задача</string>
+    <string name="tasks_create_list_cta">Создать список</string>
+    <string name="tasks_default_list_name">Мои задачи</string>
+    <string name="tasks_edit_list_cd">Редактировать список</string>
+    <string name="tasks_delete_list_cd">Удалить список</string>
+    <string name="tasks_toggle_cd">Отметить выполнение задачи</string>
+    <string name="tasks_due_today">Сегодня</string>
+    <string name="tasks_due_tomorrow">Завтра</string>
+    <string name="tasks_due_overdue">Просрочено: %1$s</string>
+
+    <!-- Task Priorities -->
+    <string name="priority_low">Низкий</string>
+    <string name="priority_medium">Средний</string>
+    <string name="priority_high">Высокий</string>
+
+    <!-- Task & List Dialogs -->
+    <string name="dialog_new_list_title">Новый список задач</string>
+    <string name="dialog_edit_list_title">Редактировать список</string>
+    <string name="dialog_list_name_label">Название списка</string>
+    <string name="dialog_list_name_hint">Например: Покупки, Проект, На неделю</string>
+    <string name="dialog_list_color_label">Цвет акцента</string>
+    <string name="dialog_list_icon_label">Иконка</string>
+    <string name="dialog_delete_list_title">Удалить список?</string>
+    <string name="dialog_delete_list_body">Список «%1$s» и все задачи в нём (%2$d) будут удалены из облака.</string>
+
+    <string name="dialog_new_task_title">Новая задача</string>
+    <string name="dialog_edit_task_title">Редактировать задачу</string>
+    <string name="dialog_task_title_label">Что нужно сделать?</string>
+    <string name="dialog_task_details_label">Подробности (необязательно)</string>
+    <string name="dialog_task_list_label">Список</string>
+    <string name="dialog_task_priority_label">Приоритет</string>
+    <string name="dialog_task_due_date_label">Срок выполнения</string>
+    <string name="dialog_task_pick_date">Выбрать дату</string>
+    <string name="dialog_task_clear_date">Убрать дату</string>
+    <string name="dialog_delete_task_title">Удалить задачу?</string>
+    <string name="dialog_delete_task_body">Задача «%1$s» будет удалена из облака.</string>
+
+    <!-- Cloud & Profile Tab -->
+    <string name="cloud_screen_title">Облако и профиль</string>
+    <string name="cloud_status_synced">Облачная синхронизация активна</string>
+    <string name="cloud_status_syncing">Обновление данных…</string>
+    <string name="cloud_status_offline_hint">Firestore автоматически кэширует заметки и задачи локально и синхронизирует изменения при подключении к сети.</string>
+    <string name="cloud_stats_notes">Заметок</string>
+    <string name="cloud_stats_pinned">Закреплено</string>
+    <string name="cloud_stats_lists">Списков</string>
+    <string name="cloud_stats_active_tasks">Активных задач</string>
+    <string name="cloud_stats_done_tasks">Выполнено</string>
+    <string name="cloud_theme_title">Оформление</string>
+    <string name="cloud_theme_system">Системное</string>
+    <string name="cloud_theme_light">Светлое</string>
+    <string name="cloud_theme_dark">Тёмное</string>
+    <string name="cloud_account_guest_name">Пользователь Google</string>
+    <string name="cloud_sign_out">Выйти из аккаунта</string>
+    <string name="cloud_sign_out_confirm_title">Выйти из аккаунта?</string>
+    <string name="cloud_sign_out_confirm_body">Все ваши заметки и задачи останутся в безопасности в облаке и загрузятся при следующем входе.</string>
+    <string name="cloud_avatar_cd">Фото профиля</string>
+
+    <!-- Common Actions & Messages -->
+    <string name="action_save">Сохранить</string>
+    <string name="action_create">Создать</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_retry">Повторить</string>
+    <string name="msg_note_saved">Заметка сохранена в облаке</string>
+    <string name="msg_note_deleted">Заметка удалена</string>
+    <string name="msg_list_saved">Список сохранён</string>
+    <string name="msg_list_deleted">Список удалён</string>
+    <string name="msg_task_saved">Задача сохранена</string>
+    <string name="msg_task_deleted">Задача удалена</string>
+    <string name="msg_sync_error">Ошибка синхронизации. Проверьте подключение.</string>
+    <string name="empty_workspace_cd">Иллюстрация открытого блокнота</string>
+</resources>

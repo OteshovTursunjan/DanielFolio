@@ -1,0 +1,151 @@
+{
+  "entities": {
+    "Note": {
+      "title": "Note",
+      "description": "A user-owned cloud-synced rich text note with category, stationery color tint, and pin status.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Authenticated owner Firebase UID."
+        },
+        "title": {
+          "type": "string",
+          "description": "Note heading (0 to 120 characters; either title or content must be non-empty)."
+        },
+        "content": {
+          "type": "string",
+          "description": "Note body text (0 to 10000 characters; either title or content must be non-empty)."
+        },
+        "category": {
+          "type": "string",
+          "enum": ["personal", "work", "ideas", "study", "other"],
+          "description": "Category tag for filtering notes."
+        },
+        "colorKey": {
+          "type": "string",
+          "enum": ["default", "sand", "sage", "terracotta", "slate", "ochre"],
+          "description": "Stationery surface tint token key."
+        },
+        "pinned": {
+          "type": "boolean",
+          "description": "Whether the note is pinned to the top of the workspace."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Immutable creation timestamp written via FieldValue.serverTimestamp()."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last modification timestamp written via FieldValue.serverTimestamp()."
+        }
+      },
+      "required": ["userId", "title", "content", "category", "colorKey", "pinned", "createdAt", "updatedAt"]
+    },
+    "TaskList": {
+      "title": "TaskList",
+      "description": "A user-owned task list folder grouping related checklist items.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Authenticated owner Firebase UID."
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the task list (1 to 60 characters)."
+        },
+        "colorKey": {
+          "type": "string",
+          "enum": ["terracotta", "sage", "ochre", "slate", "sand"],
+          "description": "Accent color token key for the list."
+        },
+        "iconKey": {
+          "type": "string",
+          "enum": ["checklist", "work", "shopping", "home", "star"],
+          "description": "Icon identifier for the list."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Immutable creation timestamp written via FieldValue.serverTimestamp()."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last modification timestamp written via FieldValue.serverTimestamp()."
+        }
+      },
+      "required": ["userId", "name", "colorKey", "iconKey", "createdAt", "updatedAt"]
+    },
+    "TaskItem": {
+      "title": "TaskItem",
+      "description": "An individual checklist task belonging to a user's TaskList.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Authenticated owner Firebase UID."
+        },
+        "listId": {
+          "type": "string",
+          "description": "Document ID of the parent TaskList under /users/{userId}/taskLists/{listId}."
+        },
+        "title": {
+          "type": "string",
+          "description": "Task title (1 to 200 characters)."
+        },
+        "details": {
+          "type": "string",
+          "description": "Optional additional description (0 to 2000 characters)."
+        },
+        "completed": {
+          "type": "boolean",
+          "description": "Whether the task has been completed."
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["low", "medium", "high"],
+          "description": "Priority level of the task."
+        },
+        "dueDateEpochDay": {
+          "type": "integer",
+          "description": "Optional due date stored as UTC epoch day (0 to 100000); omitted when unset."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Immutable creation timestamp written via FieldValue.serverTimestamp()."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last modification timestamp written via FieldValue.serverTimestamp()."
+        }
+      },
+      "required": ["userId", "listId", "title", "details", "completed", "priority", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/notes/{noteId}": {
+      "schema": {
+        "$ref": "#/entities/Note"
+      },
+      "description": "Private cloud-synced notes belonging to the authenticated user."
+    },
+    "/users/{userId}/taskLists/{listId}": {
+      "schema": {
+        "$ref": "#/entities/TaskList"
+      },
+      "description": "Private cloud-synced task lists belonging to the authenticated user."
+    },
+    "/users/{userId}/tasks/{taskId}": {
+      "schema": {
+        "$ref": "#/entities/TaskItem"
+      },
+      "description": "Private cloud-synced tasks belonging to the authenticated user and linked to a TaskList."
+    }
+  }
+}
