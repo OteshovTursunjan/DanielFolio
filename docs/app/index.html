@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Фолио</title>
+<meta name="description" content="Фолио — заметки и списки задач с облачной синхронизацией.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF7F2; --surface: #FFFFFF; --surface-2: #F1EAE0; --surface-3: #E7DFD2;
+    --outline: #DCD3C5; --ink: #1F1C18; --ink-2: #5D564E;
+    --primary: #C8553D; --on-primary: #FFFFFF; --primary-c: #FCE4DC; --on-primary-c: #5C1D11;
+    --error: #BA1A1A;
+    --n-default: #FFFFFF; --n-sand: #F7EFE1; --n-sage: #EAF3EE; --n-terracotta: #FCECE7; --n-slate: #EBF0F6; --n-ochre: #FDF3DF;
+    --a-terracotta: #C8553D; --a-sage: #3E6B5C; --a-ochre: #C97A1B; --a-slate: #4A6B8A; --a-sand: #9C7B53;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141311; --surface: #1C1A17; --surface-2: #282521; --surface-3: #2E2A25;
+      --outline: #453F38; --ink: #F3EDE4; --ink-2: #B5ACA0;
+      --primary: #EE856E; --on-primary: #491207; --primary-c: #6B281B; --on-primary-c: #FFDBD2;
+      --error: #FFB4AB;
+      --n-default: #211E1B; --n-sand: #2C261E; --n-sage: #1C2924; --n-terracotta: #30201C; --n-slate: #1D252E; --n-ochre: #2E2618;
+      --a-terracotta: #EE856E; --a-sage: #7EBBA6; --a-ochre: #EBB365; --a-slate: #8AB1D6; --a-sand: #C9AC86;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--ink); font: 15px/1.5 Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  [hidden] { display: none !important; }
+  .serif { font-family: "Playfair Display", serif; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 16px 120px; }
+
+  /* Auth */
+  #auth { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
+  .auth-card { max-width: 420px; text-align: center; }
+  .auth-card h1 { font: 700 34px/1.15 "Playfair Display", serif; margin: 0 0 12px; }
+  .auth-card p { color: var(--ink-2); margin: 0 0 28px; }
+  .feat { text-align: left; display: grid; gap: 12px; margin: 0 0 28px; }
+  .feat div { background: var(--surface); border: 1px solid var(--outline); border-radius: 16px; padding: 12px 16px; }
+  .feat b { display: block; }
+  .feat span { color: var(--ink-2); font-size: 13px; }
+  .logo { font: 700 22px "Playfair Display", serif; text-decoration: none; color: var(--ink); }
+  .logo i { color: var(--primary); font-style: normal; }
+
+  /* Buttons & inputs */
+  .btn { border: 0; border-radius: 999px; padding: 12px 22px; font-weight: 600; }
+  .btn-primary { background: var(--primary); color: var(--on-primary); }
+  .btn-tonal { background: var(--surface-2); }
+  .btn-danger { background: transparent; color: var(--error); }
+  .btn:disabled { opacity: .6; cursor: default; }
+  .icon-btn { border: 0; background: transparent; width: 40px; height: 40px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 18px; }
+  .icon-btn:hover { background: var(--surface-2); }
+  .field { width: 100%; background: var(--surface); border: 1px solid var(--outline); border-radius: 14px; padding: 12px 14px; outline: none; }
+  .field:focus { border-color: var(--primary); }
+  textarea.field { resize: vertical; min-height: 180px; }
+  label.lbl { display: block; font-size: 12px; font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: .05em; margin: 16px 0 8px; }
+
+  /* Top bar */
+  .top { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--primary-c); color: var(--on-primary-c); display: grid; place-items: center; font-weight: 700; overflow: hidden; border: 0; padding: 0; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  h2.title { font: 700 32px "Playfair Display", serif; margin: 4px 0 16px; }
+
+  /* Chips */
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 16px; scrollbar-width: none; }
+  .chip { flex: none; border: 1px solid var(--outline); background: var(--surface); border-radius: 999px; padding: 7px 14px; font-weight: 600; font-size: 13px; white-space: nowrap; }
+  .chip.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .search { position: relative; margin-bottom: 14px; }
+  .search .field { border-radius: 999px; padding-left: 42px; background: var(--surface-2); border-color: transparent; }
+  .search::before { content: "⌕"; position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--ink-2); font-size: 18px; }
+
+  /* Notes */
+  .sect { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); margin: 18px 0 10px; }
+  .notes { columns: 2 240px; column-gap: 12px; }
+  .note { break-inside: avoid; margin-bottom: 12px; border: 1px solid var(--outline); border-radius: 18px; padding: 14px 16px; cursor: pointer; position: relative; }
+  .note h4 { margin: 0 28px 6px 0; font-size: 16px; }
+  .note p { margin: 0; color: var(--ink-2); white-space: pre-wrap; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; word-break: break-word; }
+  .note .meta { display: flex; justify-content: space-between; margin-top: 10px; font-size: 12px; color: var(--ink-2); }
+  .note .pin { position: absolute; top: 6px; right: 6px; }
+  .tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--primary); }
+
+  /* Tasks */
+  .progress { background: var(--surface); border: 1px solid var(--outline); border-radius: 18px; padding: 14px 16px; margin-bottom: 14px; }
+  .progress .row { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 8px; }
+  .bar { height: 8px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--primary); transition: width .3s; }
+  .task { display: flex; align-items: flex-start; gap: 12px; background: var(--surface); border: 1px solid var(--outline); border-radius: 16px; padding: 12px 14px; margin-bottom: 10px; cursor: pointer; }
+  .check { flex: none; width: 24px; height: 24px; border-radius: 8px; border: 2px solid var(--outline); background: transparent; display: grid; place-items: center; color: var(--on-primary); font-size: 14px; padding: 0; margin-top: 1px; }
+  .task.done .check { background: var(--primary); border-color: var(--primary); }
+  .task.done .t-title { text-decoration: line-through; color: var(--ink-2); }
+  .task .body { flex: 1; min-width: 0; }
+  .t-title { font-weight: 600; word-break: break-word; }
+  .t-sub { font-size: 12px; color: var(--ink-2); display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 3px; }
+  .prio-high { color: var(--error); font-weight: 700; }
+  .prio-medium { color: var(--a-ochre); font-weight: 700; }
+  .overdue { color: var(--error); }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+
+  /* Empty */
+  .empty { text-align: center; padding: 48px 16px; color: var(--ink-2); }
+  .empty h3 { font: 700 22px "Playfair Display", serif; color: var(--ink); margin: 0 0 6px; }
+
+  /* FAB & nav */
+  .fab { position: fixed; right: max(16px, calc(50% - 364px)); bottom: 88px; border: 0; background: var(--primary-c); color: var(--on-primary-c); border-radius: 18px; padding: 16px 20px; font-weight: 700; box-shadow: 0 8px 24px -8px rgba(0,0,0,.35); }
+  nav.bottom { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface); border-top: 1px solid var(--outline); display: flex; justify-content: center; gap: 8px; padding: 8px 16px calc(8px + env(safe-area-inset-bottom)); }
+  nav.bottom button { border: 0; background: transparent; padding: 8px 22px; border-radius: 999px; font-weight: 600; color: var(--ink-2); }
+  nav.bottom button.on { background: var(--primary-c); color: var(--on-primary-c); }
+
+  /* Sheet */
+  .scrim { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: flex-end; justify-content: center; z-index: 10; }
+  .sheet { background: var(--bg); width: 100%; max-width: 640px; max-height: 92vh; overflow: auto; border-radius: 24px 24px 0 0; padding: 20px 16px calc(20px + env(safe-area-inset-bottom)); }
+  @media (min-width: 700px) { .scrim { align-items: center; } .sheet { border-radius: 24px; padding: 24px; } }
+  .sheet-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .sheet-head h3 { font: 700 22px "Playfair Display", serif; margin: 0; }
+  .sheet-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 20px; }
+  .swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+  .swatch { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--outline); padding: 0; }
+  .swatch.on { outline: 3px solid var(--primary); outline-offset: 2px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .err { color: var(--error); font-size: 13px; margin-top: 10px; }
+
+  #toast { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 12px; font-size: 14px; z-index: 20; max-width: calc(100% - 32px); }
+  #loading { min-height: 100vh; display: grid; place-items: center; color: var(--ink-2); }
+</style>
+</head>
+<body>
+<div id="loading">Проверка сессии…</div>
+
+<section id="auth" hidden>
+  <div class="auth-card">
+    <a class="logo" href="../">Фолио<i>.</i></a>
+    <h1 style="margin-top:24px">Ваши мысли и задачи — всегда под рукой</h1>
+    <p>Заметки, списки дел и мгновенная синхронизация между всеми устройствами через облако.</p>
+    <div class="feat">
+      <div><b>Мгновенная синхронизация</b><span>Те же данные, что и в Android-приложении</span></div>
+      <div><b>Заметки и списки задач</b><span>Категории, цветовые акценты, приоритеты и сроки</span></div>
+      <div><b>Приватное хранилище</b><span>Данные привязаны только к вашему аккаунту Google</span></div>
+    </div>
+    <button class="btn btn-primary" id="signin" style="width:100%">Войти через Google</button>
+    <div class="err" id="auth-err"></div>
+  </div>
+</section>
+
+<div id="main" hidden>
+  <div class="wrap">
+    <div class="top">
+      <a class="logo" href="../">Фолио<i>.</i></a>
+      <button class="avatar" id="avatar" title="Аккаунт"></button>
+    </div>
+
+    <section id="tab-notes">
+      <h2 class="title">Заметки</h2>
+      <div class="search"><input class="field" id="note-q" placeholder="Поиск по заметкам…" autocomplete="off"></div>
+      <div class="chips" id="note-chips"></div>
+      <div id="notes-out"></div>
+    </section>
+
+    <section id="tab-tasks" hidden>
+      <h2 class="title">Задачи</h2>
+      <div class="chips" id="list-chips"></div>
+      <div class="chips" id="task-filter"></div>
+      <div id="tasks-out"></div>
+    </section>
+  </div>
+  <button class="fab" id="fab">＋ Новая заметка</button>
+  <nav class="bottom">
+    <button data-tab="notes" class="on">Заметки</button>
+    <button data-tab="tasks">Задачи</button>
+  </nav>
+</div>
+
+<div id="modal"></div>
+<div id="toast" hidden></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, writeBatch,
+  serverTimestamp, deleteField } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// Same Firebase project and Firestore database as the Android app (app/google-services.json).
+const app = initializeApp({
+  apiKey: "AIzaSyDrzCu_0Oy2Ey9Icn3HC7iagnQKax2E3EE",
+  authDomain: "gen-lang-client-0518414751.firebaseapp.com",
+  projectId: "gen-lang-client-0518414751",
+  storageBucket: "gen-lang-client-0518414751.firebasestorage.app",
+  messagingSenderId: "994674142354",
+  appId: "1:994674142354:android:4a8dce752e5d05aecd8a4b",
+});
+const auth = getAuth(app);
+const db = getFirestore(app, "ai-studio-android-52244031-88db-4c6f-b0be-6b49b51627ac");
+
+const CATEGORIES = { personal: "Личное", work: "Работа", ideas: "Идеи", study: "Учёба", other: "Другое" };
+const NOTE_COLORS = ["default", "sand", "sage", "terracotta", "slate", "ochre"];
+const LIST_COLORS = ["terracotta", "sage", "ochre", "slate", "sand"];
+const LIST_ICONS = { checklist: "☑", work: "💼", shopping: "🛒", home: "🏠", star: "★" };
+const PRIORITY = { high: { label: "Высокий", w: 3 }, medium: { label: "Средний", w: 2 }, low: { label: "Низкий", w: 1 } };
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const ms = (ts) => (ts && ts.toMillis ? ts.toMillis() : 0);
+const todayEpochDay = () => { const d = new Date(); return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000); };
+const epochToInput = (n) => new Date(n * 86400000).toISOString().slice(0, 10);
+const inputToEpoch = (s) => { const [y, m, d] = s.split("-").map(Number); return Math.floor(Date.UTC(y, m - 1, d) / 86400000); };
+const fmtDay = (n) => new Date(n * 86400000).toLocaleDateString("ru-RU", { day: "numeric", month: "short", timeZone: "UTC" });
+const fmtDate = (t) => (t ? new Date(t).toLocaleDateString("ru-RU", { day: "numeric", month: "short" }) : "");
+
+let toastTimer;
+function toast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => (t.hidden = true), 3500);
+}
+function fail(e) { console.error(e); toast("Ошибка: " + (e.code || e.message || e)); }
+
+const state = { uid: null, notes: [], lists: [], tasks: [], tab: "notes",
+  noteQ: "", noteFilter: "all", listSel: "all", taskFilter: "all" };
+let unsubs = [];
+
+// ---------- Auth ----------
+$("#signin").onclick = async () => {
+  const btn = $("#signin"); btn.disabled = true; btn.textContent = "Выполняется вход…"; $("#auth-err").textContent = "";
+  try {
+    await signInWithPopup(auth, new GoogleAuthProvider());
+  } catch (e) {
+    if (e.code === "auth/popup-blocked") return signInWithRedirect(auth, new GoogleAuthProvider());
+    if (e.code !== "auth/popup-closed-by-user" && e.code !== "auth/cancelled-popup-request")
+      $("#auth-err").textContent = "Не удалось войти через Google (" + e.code + ").";
+  } finally { btn.disabled = false; btn.textContent = "Войти через Google"; }
+};
+
+onAuthStateChanged(auth, (user) => {
+  unsubs.forEach((u) => u()); unsubs = [];
+  $("#loading").hidden = true;
+  $("#auth").hidden = !!user;
+  $("#main").hidden = !user;
+  if (!user) { state.uid = null; return; }
+  state.uid = user.uid;
+  const av = $("#avatar");
+  av.innerHTML = user.photoURL ? `<img src="${esc(user.photoURL)}" alt="" referrerpolicy="no-referrer">` : esc((user.displayName || user.email || "?")[0].toUpperCase());
+  const col = (name) => collection(db, "users", user.uid, name);
+  const listen = (name, key, rerender) => unsubs.push(onSnapshot(col(name), (snap) => {
+    state[key] = snap.docs.map((d) => ({ id: d.id, ...d.data({ serverTimestamps: "estimate" }) }));
+    rerender();
+  }, fail));
+  listen("notes", "notes", renderNotes);
+  listen("taskLists", "lists", renderTasks);
+  listen("tasks", "tasks", renderTasks);
+});
+
+$("#avatar").onclick = () => {
+  const u = auth.currentUser;
+  openSheet(`
+    <div class="sheet-head"><h3>Аккаунт</h3><button class="icon-btn" data-close>✕</button></div>
+    <p><b>${esc(u.displayName || "")}</b><br><span style="color:var(--ink-2)">${esc(u.email || "")}</span></p>
+    <p style="color:var(--ink-2)">Заметок: ${state.notes.length} · Списков: ${state.lists.length} · Задач: ${state.tasks.length}</p>
+    <div class="sheet-foot"><span></span><button class="btn btn-tonal" id="signout">Выйти</button></div>`);
+  $("#signout").onclick = () => { closeSheet(); signOut(auth); };
+};
+
+// ---------- Tabs ----------
+document.querySelectorAll("nav.bottom button").forEach((b) => (b.onclick = () => {
+  state.tab = b.dataset.tab;
+  document.querySelectorAll("nav.bottom button").forEach((x) => x.classList.toggle("on", x === b));
+  $("#tab-notes").hidden = state.tab !== "notes";
+  $("#tab-tasks").hidden = state.tab !== "tasks";
+  $("#fab").textContent = state.tab === "notes" ? "＋ Новая заметка" : "＋ Новая задача";
+  window.scrollTo(0, 0);
+}));
+$("#fab").onclick = () => (state.tab === "notes" ? editNote(null) : (state.lists.length ? editTask(null) : editList(null)));
+
+// ---------- Sheet ----------
+function openSheet(html) {
+  $("#modal").innerHTML = `<div class="scrim"><div class="sheet">${html}</div></div>`;
+  const scrim = $("#modal .scrim");
+  scrim.onclick = (e) => { if (e.target === scrim || e.target.closest("[data-close]")) closeSheet(); };
+}
+function closeSheet() { $("#modal").innerHTML = ""; }
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSheet(); });
+function swatchPicker(el, keys, current, varPrefix) {
+  el.innerHTML = keys.map((k) => `<button type="button" class="swatch${k === current ? " on" : ""}" data-k="${k}" style="background:var(${varPrefix}${k})" title="${k}"></button>`).join("");
+  el.onclick = (e) => { const b = e.target.closest(".swatch"); if (!b) return; el.querySelectorAll(".swatch").forEach((x) => x.classList.toggle("on", x === b)); el.dataset.value = b.dataset.k; };
+  el.dataset.value = current;
+}
+
+// ---------- Notes ----------
+$("#note-q").oninput = (e) => { state.noteQ = e.target.value; renderNotes(); };
+$("#note-chips").onclick = (e) => { const c = e.target.closest(".chip"); if (c) { state.noteFilter = c.dataset.f; renderNotes(); } };
+
+function renderNotes() {
+  const filters = [["all", "Все"], ["pinned", "Закреплённые"], ...Object.entries(CATEGORIES)];
+  $("#note-chips").innerHTML = filters.map(([k, v]) => `<button class="chip${state.noteFilter === k ? " on" : ""}" data-f="${k}">${v}</button>`).join("");
+  const q = state.noteQ.trim().toLowerCase();
+  const list = state.notes
+    .filter((n) => state.noteFilter === "all" || (state.noteFilter === "pinned" ? n.pinned : n.category === state.noteFilter))
+    .filter((n) => !q || (n.title + " " + n.content).toLowerCase().includes(q))
+    .sort((a, b) => ms(b.updatedAt) - ms(a.updatedAt));
+  const out = $("#notes-out");
+  if (!list.length) {
+    out.innerHTML = state.notes.length
+      ? `<div class="empty"><h3>Ничего не найдено</h3>Попробуйте изменить запрос или выбрать другую категорию.</div>`
+      : `<div class="empty"><h3>Чистый лист</h3>Запишите идею, конспект или важную мысль — она сразу сохранится в облаке.</div>`;
+    return;
+  }
+  const card = (n) => `
+    <div class="note" data-id="${n.id}" style="background:var(--n-${NOTE_COLORS.includes(n.colorKey) ? n.colorKey : "default"})">
+      <button class="icon-btn pin" data-pin="${n.id}" title="${n.pinned ? "Открепить" : "Закрепить"}">${n.pinned ? "📌" : "<span style='opacity:.35'>📌</span>"}</button>
+      <h4>${esc(n.title || "Без названия")}</h4>
+      ${n.content ? `<p>${esc(n.content)}</p>` : ""}
+      <div class="meta"><span class="tag">${esc(CATEGORIES[n.category] || "")}</span><span>${fmtDate(ms(n.updatedAt))}</span></div>
+    </div>`;
+  const pinned = list.filter((n) => n.pinned), others = list.filter((n) => !n.pinned);
+  out.innerHTML =
+    (pinned.length && state.noteFilter !== "pinned" ? `<div class="sect">Закреплённые</div><div class="notes">${pinned.map(card).join("")}</div><div class="sect">Все заметки</div>` : "") +
+    `<div class="notes">${(state.noteFilter === "pinned" ? pinned : pinned.length ? others : list).map(card).join("")}</div>`;
+}
+
+$("#notes-out").onclick = (e) => {
+  const pin = e.target.closest("[data-pin]");
+  if (pin) {
+    const n = state.notes.find((x) => x.id === pin.dataset.pin);
+    updateDoc(doc(db, "users", state.uid, "notes", n.id), { pinned: !n.pinned, updatedAt: serverTimestamp() }).catch(fail);
+    return;
+  }
+  const card = e.target.closest(".note");
+  if (card) editNote(state.notes.find((x) => x.id === card.dataset.id));
+};
+
+function editNote(note) {
+  openSheet(`
+    <div class="sheet-head"><h3>${note ? "Редактирование" : "Новая заметка"}</h3><button class="icon-btn" data-close>✕</button></div>
+    <input class="field serif" id="n-title" maxlength="120" placeholder="Заголовок" style="font-size:20px;font-weight:700" value="${esc(note?.title)}">
+    <textarea class="field" id="n-content" maxlength="10000" placeholder="Начните писать здесь…" style="margin-top:10px">${esc(note?.content)}</textarea>
+    <label class="lbl">Категория</label>
+    <div class="chips" id="n-cat">${Object.entries(CATEGORIES).map(([k, v]) => `<button type="button" class="chip${(note?.category || "personal") === k ? " on" : ""}" data-k="${k}">${v}</button>`).join("")}</div>
+    <label class="lbl">Оттенок листа</label>
+    <div class="swatches" id="n-color"></div>
+    <div class="err" id="n-err"></div>
+    <div class="sheet-foot">
+      ${note ? `<button class="btn btn-danger" id="n-del">Удалить</button>` : "<span></span>"}
+      <button class="btn btn-primary" id="n-save">Сохранить</button>
+    </div>`);
+  let cat = note?.category || "personal";
+  $("#n-cat").onclick = (e) => { const c = e.target.closest(".chip"); if (!c) return; cat = c.dataset.k; $("#n-cat").querySelectorAll(".chip").forEach((x) => x.classList.toggle("on", x === c)); };
+  swatchPicker($("#n-color"), NOTE_COLORS, note?.colorKey || "default", "--n-");
+  if (!note) $("#n-title").focus();
+
+  $("#n-save").onclick = async () => {
+    const title = $("#n-title").value.trim(), content = $("#n-content").value.trim();
+    if (!title && !content) { $("#n-err").textContent = "Введите заголовок или текст заметки"; return; }
+    const data = { title, content, category: cat, colorKey: $("#n-color").dataset.value, updatedAt: serverTimestamp() };
+    $("#n-save").disabled = true; $("#n-save").textContent = "Сохранение…";
+    try {
+      if (note) await updateDoc(doc(db, "users", state.uid, "notes", note.id), data);
+      else await addDoc(collection(db, "users", state.uid, "notes"), { ...data, userId: state.uid, pinned: false, createdAt: serverTimestamp() });
+      closeSheet();
+    } catch (e) { fail(e); $("#n-save").disabled = false; $("#n-save").textContent = "Сохранить"; }
+  };
+  if (note) $("#n-del").onclick = async () => {
+    if (!confirm("Удалить заметку? Она будет удалена из облака на всех устройствах.")) return;
+    try { await deleteDoc(doc(db, "users", state.uid, "notes", note.id)); closeSheet(); } catch (e) { fail(e); }
+  };
+}
+
+// ---------- Tasks ----------
+$("#list-chips").onclick = (e) => {
+  const c = e.target.closest(".chip"); if (!c) return;
+  if (c.dataset.new !== undefined) return editList(null);
+  if (c.dataset.l === state.listSel && c.dataset.l !== "all") return editList(state.lists.find((l) => l.id === c.dataset.l));
+  state.listSel = c.dataset.l; renderTasks();
+};
+$("#task-filter").onclick = (e) => { const c = e.target.closest(".chip"); if (c) { state.taskFilter = c.dataset.f; renderTasks(); } };
+
+function renderTasks() {
+  const lists = [...state.lists].sort((a, b) => ms(a.createdAt) - ms(b.createdAt));
+  if (state.listSel !== "all" && !lists.some((l) => l.id === state.listSel)) state.listSel = "all";
+  $("#list-chips").innerHTML =
+    `<button class="chip${state.listSel === "all" ? " on" : ""}" data-l="all">Все списки</button>` +
+    lists.map((l) => `<button class="chip${state.listSel === l.id ? " on" : ""}" data-l="${l.id}" title="Нажмите ещё раз, чтобы изменить"><span class="dot" style="background:var(--a-${esc(l.colorKey)})"></span>${LIST_ICONS[l.iconKey] || ""} ${esc(l.name)}</button>`).join("") +
+    `<button class="chip" data-new>＋ Список</button>`;
+  $("#task-filter").innerHTML = [["all", "Все"], ["active", "Активные"], ["completed", "Выполненные"]]
+    .map(([k, v]) => `<button class="chip${state.taskFilter === k ? " on" : ""}" data-f="${k}">${v}</button>`).join("");
+
+  const out = $("#tasks-out");
+  if (!lists.length) {
+    out.innerHTML = `<div class="empty"><h3>Создайте первый список задач</h3>Группируйте дела по проектам, покупкам или планам на день.<br><br><button class="btn btn-primary" id="first-list">Создать список</button></div>`;
+    $("#first-list").onclick = () => editList(null);
+    return;
+  }
+  const listIds = new Set(lists.map((l) => l.id));
+  const scoped = state.tasks.filter((t) => (state.listSel === "all" ? listIds.has(t.listId) : t.listId === state.listSel));
+  const done = scoped.filter((t) => t.completed).length;
+  const shown = scoped
+    .filter((t) => state.taskFilter === "all" || (state.taskFilter === "completed" ? t.completed : !t.completed))
+    .sort((a, b) => (a.completed - b.completed) || ((PRIORITY[b.priority]?.w || 0) - (PRIORITY[a.priority]?.w || 0)) ||
+      ((a.dueDateEpochDay ?? 1e9) - (b.dueDateEpochDay ?? 1e9)) || (ms(b.createdAt) - ms(a.createdAt)));
+  const listById = Object.fromEntries(lists.map((l) => [l.id, l]));
+  const today = todayEpochDay();
+  out.innerHTML =
+    `<div class="progress"><div class="row"><span>Прогресс выполнения</span><span>${done} из ${scoped.length} выполнено</span></div><div class="bar"><i style="width:${scoped.length ? (done / scoped.length) * 100 : 0}%"></i></div></div>` +
+    (shown.length ? shown.map((t) => {
+      const l = listById[t.listId];
+      const due = t.dueDateEpochDay != null ? `<span class="${!t.completed && t.dueDateEpochDay < today ? "overdue" : ""}">📅 ${fmtDay(t.dueDateEpochDay)}</span>` : "";
+      return `<div class="task${t.completed ? " done" : ""}" data-id="${t.id}">
+        <button class="check" data-toggle="${t.id}" aria-label="Выполнено">${t.completed ? "✓" : ""}</button>
+        <div class="body"><div class="t-title">${esc(t.title)}</div>
+          <div class="t-sub">${t.priority !== "low" ? `<span class="prio-${t.priority}">${PRIORITY[t.priority]?.label || ""}</span>` : ""}${due}
+          ${state.listSel === "all" && l ? `<span><span class="dot" style="background:var(--a-${esc(l.colorKey)})"></span>${esc(l.name)}</span>` : ""}
+          ${t.details ? `<span>${esc(t.details.slice(0, 80))}</span>` : ""}</div></div></div>`;
+    }).join("") : `<div class="empty"><h3>Задач пока нет</h3>Добавьте новую задачу — отметка выполнения синхронизируется мгновенно.</div>`);
+}
+
+$("#tasks-out").onclick = (e) => {
+  const tg = e.target.closest("[data-toggle]");
+  if (tg) {
+    const t = state.tasks.find((x) => x.id === tg.dataset.toggle);
+    updateDoc(doc(db, "users", state.uid, "tasks", t.id), { completed: !t.completed, updatedAt: serverTimestamp() }).catch(fail);
+    return;
+  }
+  const row = e.target.closest(".task");
+  if (row) editTask(state.tasks.find((x) => x.id === row.dataset.id));
+};
+
+function editTask(task) {
+  const lists = [...state.lists].sort((a, b) => ms(a.createdAt) - ms(b.createdAt));
+  const listId = task?.listId || (state.listSel !== "all" ? state.listSel : lists[0].id);
+  openSheet(`
+    <div class="sheet-head"><h3>${task ? "Редактирование" : "Новая задача"}</h3><button class="icon-btn" data-close>✕</button></div>
+    <input class="field" id="t-title" maxlength="200" placeholder="Что нужно сделать?" value="${esc(task?.title)}">
+    <textarea class="field" id="t-details" maxlength="2000" placeholder="Подробности (необязательно)" style="min-height:90px;margin-top:10px">${esc(task?.details)}</textarea>
+    <div class="row2">
+      <div><label class="lbl">Список</label><select class="field" id="t-list">${lists.map((l) => `<option value="${l.id}"${l.id === listId ? " selected" : ""}>${esc(l.name)}</option>`).join("")}</select></div>
+      <div><label class="lbl">Срок</label><input class="field" type="date" id="t-due" value="${task?.dueDateEpochDay != null ? epochToInput(task.dueDateEpochDay) : ""}"></div>
+    </div>
+    <label class="lbl">Приоритет</label>
+    <div class="chips" id="t-prio">${Object.entries(PRIORITY).reverse().map(([k, v]) => `<button type="button" class="chip${(task?.priority || "medium") === k ? " on" : ""}" data-k="${k}">${v.label}</button>`).join("")}</div>
+    <div class="err" id="t-err"></div>
+    <div class="sheet-foot">
+      ${task ? `<button class="btn btn-danger" id="t-del">Удалить</button>` : "<span></span>"}
+      <button class="btn btn-primary" id="t-save">Сохранить</button>
+    </div>`);
+  let prio = task?.priority || "medium";
+  $("#t-prio").onclick = (e) => { const c = e.target.closest(".chip"); if (!c) return; prio = c.dataset.k; $("#t-prio").querySelectorAll(".chip").forEach((x) => x.classList.toggle("on", x === c)); };
+  if (!task) $("#t-title").focus();
+
+  $("#t-save").onclick = async () => {
+    const title = $("#t-title").value.trim();
+    if (!title) { $("#t-err").textContent = "Введите название задачи"; return; }
+    const dueStr = $("#t-due").value;
+    const data = { title, details: $("#t-details").value.trim(), listId: $("#t-list").value, priority: prio, updatedAt: serverTimestamp() };
+    $("#t-save").disabled = true;
+    try {
+      if (task) {
+        await updateDoc(doc(db, "users", state.uid, "tasks", task.id), { ...data, dueDateEpochDay: dueStr ? inputToEpoch(dueStr) : deleteField() });
+      } else {
+        const full = { ...data, userId: state.uid, completed: false, createdAt: serverTimestamp() };
+        if (dueStr) full.dueDateEpochDay = inputToEpoch(dueStr);
+        await addDoc(collection(db, "users", state.uid, "tasks"), full);
+      }
+      closeSheet();
+    } catch (e) { fail(e); $("#t-save").disabled = false; }
+  };
+  if (task) $("#t-del").onclick = async () => {
+    if (!confirm("Удалить задачу?")) return;
+    try { await deleteDoc(doc(db, "users", state.uid, "tasks", task.id)); closeSheet(); } catch (e) { fail(e); }
+  };
+}
+
+function editList(list) {
+  openSheet(`
+    <div class="sheet-head"><h3>${list ? "Список" : "Новый список"}</h3><button class="icon-btn" data-close>✕</button></div>
+    <input class="field" id="l-name" maxlength="60" placeholder="Название списка" value="${esc(list?.name)}">
+    <label class="lbl">Цвет</label><div class="swatches" id="l-color"></div>
+    <label class="lbl">Значок</label>
+    <div class="chips" id="l-icon">${Object.entries(LIST_ICONS).map(([k, v]) => `<button type="button" class="chip${(list?.iconKey || "checklist") === k ? " on" : ""}" data-k="${k}" style="font-size:16px">${v}</button>`).join("")}</div>
+    <div class="err" id="l-err"></div>
+    <div class="sheet-foot">
+      ${list ? `<button class="btn btn-danger" id="l-del">Удалить список</button>` : "<span></span>"}
+      <button class="btn btn-primary" id="l-save">${list ? "Сохранить" : "Создать список"}</button>
+    </div>`);
+  let icon = list?.iconKey || "checklist";
+  $("#l-icon").onclick = (e) => { const c = e.target.closest(".chip"); if (!c) return; icon = c.dataset.k; $("#l-icon").querySelectorAll(".chip").forEach((x) => x.classList.toggle("on", x === c)); };
+  swatchPicker($("#l-color"), LIST_COLORS, list?.colorKey || "terracotta", "--a-");
+  $("#l-name").focus();
+
+  $("#l-save").onclick = async () => {
+    const name = $("#l-name").value.trim();
+    if (!name) { $("#l-err").textContent = "Введите название списка"; return; }
+    const data = { name, colorKey: $("#l-color").dataset.value, iconKey: icon, updatedAt: serverTimestamp() };
+    $("#l-save").disabled = true;
+    try {
+      if (list) await updateDoc(doc(db, "users", state.uid, "taskLists", list.id), data);
+      else {
+        const ref = await addDoc(collection(db, "users", state.uid, "taskLists"), { ...data, userId: state.uid, createdAt: serverTimestamp() });
+        state.listSel = ref.id;
+      }
+      closeSheet(); renderTasks();
+    } catch (e) { fail(e); $("#l-save").disabled = false; }
+  };
+  if (list) $("#l-del").onclick = async () => {
+    const own = state.tasks.filter((t) => t.listId === list.id);
+    if (!confirm(`Удалить список «${list.name}» и ${own.length} задач в нём?`)) return;
+    try {
+      const batch = writeBatch(db);
+      own.forEach((t) => batch.delete(doc(db, "users", state.uid, "tasks", t.id)));
+      batch.delete(doc(db, "users", state.uid, "taskLists", list.id));
+      await batch.commit(); closeSheet();
+    } catch (e) { fail(e); }
+  };
+}
+</script>
+</body>
+</html>
